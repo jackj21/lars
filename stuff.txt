@@ -1,0 +1,14 @@
+Stuff we have to do:
+
+- make the slides
+  - formatting
+    - has to be 27 slides
+  - core concepts
+  - when and why to use method
+  - theory/math
+
+- implement baby examples (1-2)
+  - compare to other methods
+
+- implement real example
+  - compare to other methods
