@@ -1,9 +1,13 @@
 ---
 title: "Least-angle Regression (LARS)"
 author: "OverFit Noise Group 5: Yahya Hussein, Andrew Farabow, Bryan Nguyen, Jack Jiang, Manning Luo, Shelby Neal"
-date: "11/10/2021"
-output: ioslides_presentation
-widescreen: true
+date: "November 24, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    theme: beige
+    highlight: zenburn
+    widescreen: true
+    mathjax: default
 ---
 
 ```{r setup, include=FALSE}
@@ -30,7 +34,13 @@ plot(pressure)
 ```
 
 ## Mathematical / Statistical Walk Through 
+$\hat{y}=\hat{B}_{0}+\hat{B}_{1}x$
 
+----
+
+part 2
+
+----
 
 ## Baby Example 1
 ```{r}
@@ -42,12 +52,15 @@ plot(pressure)
 plot(pressure)
 ```
 
+
 ## Lars using Crime
 ```{r}
 plot(pressure)
 ```
 
 ## References
+1. https://tibshirani.su.domains/ftp/lars.pdf
+2. https://ir.library.louisville.edu/cgi/viewcontent.cgi?article=3487&context=etd
 
 ## Wrap Up 
 
