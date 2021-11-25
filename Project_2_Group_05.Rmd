@@ -1,13 +1,14 @@
 ---
 title: "Least-angle Regression (LARS)"
-author: "OverFit Noise Group 5: Yahya Hussein, Andrew Farabow, Bryan Nguyen, Jack Jiang, Manning Luo, Shelby Neal"
+author: "Group 5 Overfit Noise: Yahya Hussein, Andrew Farabow, Bryan Nguyen, Jack Jiang, Manning Luo, Shelby Neal"
 date: "November 24, 2021"
 output: 
   revealjs::revealjs_presentation:
-    theme: beige
-    highlight: zenburn
+    theme: simple
+    highlight: espresso
     widescreen: true
     mathjax: default
+    centering: false
 ---
 
 ```{r setup, include=FALSE}
@@ -33,8 +34,12 @@ summary(cars)
 plot(pressure)
 ```
 
-## Mathematical / Statistical Walk Through 
-$\hat{y}=\hat{B}_{0}+\hat{B}_{1}x$
+## Mathematical Theory
+
+- LARS is related to Forward Selection and based off of Forward Stagewise Regression. 
+- Forward Selection, also known as "Forward Stepwise Regression," is an ambitious algorithm that creates a model by selecting the predictors most correlated to the response. 
+Downsides?
+
 
 ----
 
@@ -48,8 +53,16 @@ plot(pressure)
 ```
 
 ## Baby Example 2
+```{r error=FALSE, warning=FALSE, echo=TRUE}
+head(mtcars)
+attach(mtcars)
+```
 ```{r}
-plot(pressure)
+library(lars)
+car_x <- mtcars[c(2:11),]
+
+# Using lars function on 
+car_lars <- lars(car_x, mpg, type="lar", trace=TRUE, normalize=TRUE, intercept=TRUE)
 ```
 
 
@@ -61,6 +74,7 @@ plot(pressure)
 ## References
 1. https://tibshirani.su.domains/ftp/lars.pdf
 2. https://ir.library.louisville.edu/cgi/viewcontent.cgi?article=3487&context=etd
+3. https://cran.r-project.org/web/packages/lars/lars.pdf
 
 ## Wrap Up 
 
