@@ -42,7 +42,7 @@ summary(cars)
 ### Some other model section methods
 
 - Forward stagewise regression: tries to remedy the greediness of forward selection by only partially adding variables. Whereas forward selection finds the variable with the most explanatory power and goes all out in adding it to the model, forward stagewise finds the variable with the most explanatory power and updates its weight by only epsilon in the correct direction. 
-  -The problem now is that we have to make tons of updates, so forward stagewise can be very inefficient.
+  - The problem now is that we have to make tons of updates, so forward stagewise can be very inefficient.
 
 ## When and Why Use Lars
 
