@@ -28,7 +28,7 @@ developed by Bradley Efron, Trevor Hastie, Iain Johnstone and Robert Tibshirani
 summary(cars)
 ```
 
-## Why Use Lars
+## When and Why Use Lars
 
 ### Some other model selection methods
 
