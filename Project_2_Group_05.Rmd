@@ -30,9 +30,31 @@ summary(cars)
 
 ## Why Use Lars
 
-```{r}
-plot(pressure)
-```
+### Some other model selection methods
+
+- Forward selection: starts with no variables in the model, and at each step it adds to the model the variable with the most explanatory power, stopping if the explanatory power falls below some threshold. 
+  - This is a fast and simple method, but it can also be too greedy: we fully add variables at each step, so correlated predictors don't get much of a chance to be included in the model.
+  - Example: Build a model for the deliciousness of a sandwich 
+    - Variables: peanut butter and jelly
+
+## When and Why Use Lars
+
+### Some other model section methods
+
+- Forward stagewise regression: tries to remedy the greediness of forward selection by only partially adding variables. Whereas forward selection finds the variable with the most explanatory power and goes all out in adding it to the model, forward stagewise finds the variable with the most explanatory power and updates its weight by only epsilon in the correct direction. 
+  -The problem now is that we have to make tons of updates, so forward stagewise can be very inefficient.
+
+## When and Why Use Lars
+
+- LARS: Instead of making tiny hops in the direction of one variable at a time, LARS makes optimally-sized leaps in optimal directions. These directions are chosen to make equal angles/correlations with each of the variables currently in our model.
+
+## When and Why Use Lars
+
+### Advantages of using Lars
+
+1. Computationally as fast as forward selection but may sometimes be more accurate.
+2. Numerically very efficient when the number of features is much larger than the number of data instances.
+3. It can easily be modified to produce solutions for other estimators.
 
 ## Mathematical Theory
 
