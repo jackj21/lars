@@ -9,6 +9,7 @@ output:
     widescreen: true
     mathjax: default
     centering: false
+    fig_caption: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -19,13 +20,13 @@ knitr::opts_chunk$set(echo = FALSE)
 ## History of Lars
 
 - LARS is a relatively new algorithm for fitting regressions to high-dimensional data developed 
-- Developed in 2004 by Standford affiliates Bradley Efron, Trevor Hastie, Iain Johnstone and Robert Tibshirani
+- Developed in 2004 by Stanford affiliates Bradley Efron, Trevor Hastie, Iain Johnstone and Robert Tibshirani
 - Used as a less greedy and more efficient version of other model selection algorithms
 
 ## Core Concepts 
 - LARS is considered a shrinkage method
   - Regression used to shrink high dimensional data and automatically select variables for model selection
-- LARS is like a combination of forward stepwise regression and forward stagwise regression
+- LARS is like a combination of forward stepwise regression and forward stagewise regression
 - Instead of adding variables to the model one at a time, LARS makes optimally-sized leaps in optimal directions. These directions are chosen to make equal angles/correlations with each of the variables currently in our model.
 
 ## Core Concepts 
@@ -35,7 +36,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Core Concepts 
 -	Continues until another predictor variable has similar correlation with the calculated residual.
--	Add that next predictor variable to the model, then increase their coeffients in the direction of the joint least-squares coefficeint until another predictor variable of similar correlation to their residual is found
+-	Add that next predictor variable to the model, then increase their coefficients in the direction of the joint least-squares coefficient until another predictor variable of similar correlation to their residual is found
 -	This process repeats itself until the model reaches the full least-squares solution
 
 ## When and Why Use Lars
@@ -72,6 +73,44 @@ knitr::opts_chunk$set(echo = FALSE)
 - Forward Selection, also known as "Forward Stepwise Regression," is an ambitious algorithm that creates a model by selecting the predictors most correlated to the response. 
 Downsides?
 
+## Mathematical Theory
+
+### Setting up the Problem
+
+- As with the classic forward selection model, start with all coefficients $\beta_j=0;\ j\in[1,m];\ m=\text{number of predictors}$
+- Find the predictor $x_j$ that has the highest correlation with $y$
+- $\begin{cases}r > 0 & ;\ \text{increase } \beta _{j}\\r < 0 & ;\ \text{decrease } \beta _{j}\end{cases}$, and calculate residuals of the new model fit ($\hat{y}=\beta_jx;\ r=y-\hat{y}$)
+
+## Mathematical Theory
+
+### Estimating the First Coefficient
+
+- Now that we have some residuals, we can calculate the correlation between the residuals and $x_j$, as well as the other predictors
+- At each increment/decrement of $\beta_j$, we examine these correlations and only stop adjusting $\beta_j$ when we find some new predictor $x_k$ that has equal correlation with the residuals as $x_j$
+
+## Mathematical Theory
+
+### Fitting the Model
+
+- Once we've found the competing predictor $x_k$, we increase $(\beta_j, \beta_k)$, but this time in their joint least squares direction, and continue until some new competing predictor has as much correlation with the residuals
+<center>![LARS Algorithm w/ m=2 Predictors](math_img1.PNG){width=50%}</center>
+$$[4]$$
+
+## Mathematical Theory
+
+### Optimizing the Solution
+
+- For $m>3$, once we estimate the first two predictors, subsequent estimates with 3 or more predictors will fit the model along equiangular vectors
+    - Since we are now dealing in higher-dimensional space, it's not as simple as taking the bisector of two vectors
+- We stop adjusting the model when $< r,x_j>=0\forall j$
+
+## Mathetmatical Theory
+
+### Visualizing the Goal
+
+- The end goal is to maximize the reduction of absolute correlations to the residuals at each step
+<center>![Correlations in LARS w/ m=10 Predictors](math_img2.PNG){width=40%}</center>
+$$[4]$$
 
 ----
 
@@ -91,10 +130,10 @@ attach(mtcars)
 ```
 ```{r}
 library(lars)
-car_x <- mtcars[c(2:11),]
+car_x <- as.matrix(subset(mtcars, select=-c(mpg)))
 
 # Using lars function on 
-car_lars <- lars(car_x, mpg, type="lar", trace=TRUE, normalize=TRUE, intercept=TRUE)
+car_lars <- lars(car_x, mtcars$mpg, type="lar", trace=TRUE, normalize=TRUE, intercept=TRUE)
 ```
 
 
@@ -107,6 +146,10 @@ plot(pressure)
 1. https://tibshirani.su.domains/ftp/lars.pdf
 2. https://ir.library.louisville.edu/cgi/viewcontent.cgi?article=3487&context=etd
 3. https://cran.r-project.org/web/packages/lars/lars.pdf
+
+## References
+
+4. https://web.stanford.edu/~hastie/TALKS/bradfest.pdf
 
 ## Wrap Up 
 
