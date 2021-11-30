@@ -5,7 +5,7 @@ date: "November 30, 2021"
 output: 
   revealjs::revealjs_presentation:
     theme: beige
-    highlight: espresso
+    highlight: zenburn
     widescreen: true
     mathjax: default
     centering: false
@@ -19,7 +19,6 @@ output:
 
 library(knitr) # I recommend doing this here
 library(ggplot2)
-library(lars)
 # Although you can call functions from a library using the following notation
 #  without loading the entire library.
 knitr::opts_chunk$set(echo = TRUE, 
@@ -132,40 +131,41 @@ and calculate residuals of the new model fit ($\hat{y}=\beta_jx;\ r=y-\hat{y}$)
 <center>[4] Correlations in LARS w/ m=10 Predictors</center>
 
 
-## Baby Example 1
+## Baby Example 1 - LARS & USArrests Dataset
 ```{r echo = TRUE}
-#UsArrests Data from 1973
+# UsArrests Data from 1973
 head(USArrests)
 ```
 
 ```{r echo = TRUE, warning = FALSE, error = FALSE, message = FALSE}
+# Call lars library to use lars() function
 library(lars)
 ```
 
+----
 
-## Baby Example 1
 ```{r echo = TRUE, fig.width=6.5, fig.height=4.5}
-#Matrix of predictors for lars function
+# Matrix of predictors for lars function
 X = model.matrix(USArrests$UrbanPop ~ ., data = USArrests)[,-1]
-#Response variable
-y = USArrests$UrbanPop
+y = USArrests$UrbanPop # Response variable
+# Call lars function to perform least angle regression
 us.lars = lars(X,y,type="lar")
 plot(us.lars)
-
 ```
 
-## Baby Example 1
+----
+
 ```{r echo = TRUE}
-#Summary and coefficients of our lars fit
+# Summary and coefficients of our lars fit
 summary(us.lars)
 ```
-```{r echo = TRUE}
 
+```{r echo = TRUE}
 coef(us.lars)
 ```
 
 
-## Baby Example 2 - Using mtcars Data Set
+## Baby Example 2 - LARS & mtcars Dataset
 ```{r, error=FALSE, warning=FALSE, echo=TRUE}
 head(mtcars, 5)
 
@@ -178,7 +178,8 @@ head(car_x, 5)
 attach(mtcars)
 ```
 
----
+----
+
 ```{r, error=FALSE, warning=FALSE}
 # Using lars function on mtcars dataset
 car_lars <- lars(car_x, mtcars$mpg, type="lar", trace=TRUE, 
@@ -186,17 +187,21 @@ car_lars <- lars(car_x, mtcars$mpg, type="lar", trace=TRUE,
 ```
 
 ```{r}
+# Let's see what variables were added to model and in which order
 colnames(car_x)
 ```
 
----
+----
+
 
 ```{r}
 # Get summary of our mtcars lars object in the form of an ANOVA table
 summary(car_lars)
 ```
 
----
+
+----
+
 ```{r, fig.width=8, fig.height=6}
 plot(car_lars)
 ```
@@ -205,12 +210,12 @@ plot(car_lars)
 detach(mtcars)
 ```
 
----
+----
 
 
 
 
-## Example: Crime and Social Factors by DC Ward
+## Demo: Crime and Social Factors by DC Ward
 
 Predict the number of crimes for each of Washington, DC's eight wards from a dataset of socioeconomic statistics.
 
@@ -220,11 +225,14 @@ US Census data on topics such as household types, relationship and marital statu
 **Response - Crimes Committed in the Past Two Years**  
 Provided by the DC Metropolitian Police Department, hosted at https://dcatlas.dcgis.dc.gov.
 
-## Example: Crime and Social Factors by DC Ward
+
+----
+
 This problem is perfect for LARS, since the number of predictors is much greater than the number of samples (153 vs 8) and multicollinearity is very high.
 ```{r}
-# load the dataset for the predictors
+# Load the dataset for the predictors
 social_data = read.csv("ACS_Social_Characteristics_DC_Ward.csv")
+# Clean up name of 1st column
 names(social_data)[1] <- 'OBJECTID'
 ```
 
@@ -232,21 +240,26 @@ names(social_data)[1] <- 'OBJECTID'
 attach(social_data)
 ```
 
-
 ```{r}
-# order the dataset by ward 1-8 for convenience
+# Order the dataset by ward 1-8 for convenience
 x = social_data[order(social_data$WARD),]
 
-# drop unneeded columns and convert to a matrix
-x = as.matrix(subset(x, select = -c(OBJECTID, STATEFP, SLDUST, GEOID, NAMELSAD, LSAD,	LSY, MTFCC, FUNCSTAT, ALAND, AWATER, INTPTLAT, INTPTLON, NAME, WARD, GIS_ID,	SHAPEAREA, SHAPELEN)))
+# Drop unneeded columns and convert to a matrix
+x = as.matrix(subset(x, select = -c(OBJECTID, STATEFP, SLDUST, 
+                                    GEOID, NAMELSAD, LSAD,	
+                                    LSY, MTFCC, FUNCSTAT, 
+                                    ALAND, AWATER, INTPTLAT, 
+                                    INTPTLON, NAME, WARD, 
+                                    GIS_ID,	SHAPEAREA, SHAPELEN)))
 ```
 
-## Example: Crime and Social Factors by DC Ward
+----
+
 ```{r}
-# load the response data
+# Load the response data
 social_data = read.csv("dc-crimes-search-results.csv")
 
-# since the dataset is just a raw list of crimes, 
+# Since the dataset is just a raw list of crimes, 
 # calculate the total number of crimes for each ward
 # and generate a new matrix from that information
 y = as.matrix(data.frame(y=c(
@@ -261,13 +274,16 @@ y = as.matrix(data.frame(y=c(
 )))
 ```
 
-## Example: Crime and Social Factors by DC Ward
+---- 
+
 ```{r}
-# fit the model
+# Fit the model
 lars_fit = lars(x, y, type="lar", trace=TRUE)
 ```
 
-## Example: Crime and Social Factors by DC Ward
+
+----
+
 We can consult the dataset to see what the variables shown in the other slide represent.
 
 ```
@@ -275,34 +291,43 @@ Males 15 years and over: Never married
 
 Total households: Male householder, no spouse/partner present  
 
-Total households: Male householder, no spouse/partner present: Householder living alone: 65 years and over  
+Total households: Male householder, no spouse/partner present: 
+                  Householder living alone: 65 years and over  
 
 Males 15 years and over  
 
-Total households: Male householder, no spouse/partner present: With own children of the householder under 18 years  
+Total households: Male householder, no spouse/partner present: 
+          With own children of the householder under 18 years  
 
-Population 3 years and over enrolled in school: Elementary school (grades 1-8)  
+Population 3 years and over enrolled in school: 
+                Elementary school (grades 1-8)  
 
 Males 15 years and over: Divorced  
 ```
+----
 
-## Example: Crime and Social Factors by DC Ward
-```{r}
-# plot fitted values vs actual values to assess goodness
+```{r, fig.width=6.5, fig.height=4.5}
+# Plot fitted values vs actual values to assess goodness
 fitted_values = predict.lars(lars_fit, type="fit", x, s=2)$fit
 
-ggplot(data=as.data.frame(y), aes(x=fitted_values, y=y)) + geom_point() +
-  labs(x='Predicted Values', y='Actual Values', title='Predicted vs. Actual Values')
+ggplot(data=as.data.frame(y), aes(x=fitted_values, y=y)) + 
+      geom_point() + labs(x='Predicted Values', 
+      y='Actual Values', title='Predicted vs. Actual Values')
 ```
 
-## Example: Crime and Social Factors by DC Ward
-```{r}
+----
+
+```{r, fig.width=7.5, fig.height=5.75}
 plot(lars_fit)
 ```
+
+----
 
 ```{r, include=FALSE}
 detach(social_data)
 ```
+
+## Conclusions
 
 ## References
 1. https://tibshirani.su.domains/ftp/lars.pdf
