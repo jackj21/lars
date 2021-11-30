@@ -260,6 +260,7 @@ y = as.matrix(data.frame(y=c(
 
 ## Example: Crime and Social Factors by DC Ward
 ```{r}
+# fit the model
 lars_fit = lars(x, y, type="lar", trace=TRUE)
 ```
 
@@ -284,6 +285,7 @@ Males 15 years and over: Divorced
 
 ## Example: Crime and Social Factors by DC Ward
 ```{r}
+# plot fitted values vs actual values to assess goodness
 fitted_values = predict.lars(lars_fit, type="fit", x, s=2)$fit
 
 ggplot(data=as.data.frame(y), aes(x=fitted_values, y=y)) + geom_point() +
