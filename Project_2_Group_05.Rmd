@@ -68,6 +68,10 @@ knitr::opts_chunk$set(echo = FALSE)
 2. Numerically very efficient when the number of features is much larger than the number of data instances.
 3. It can easily be modified to produce solutions for other estimators.
 
+### Disadvntages of using Lars
+
+- LARS is highly sensitive to noise and can produce unpredictable results sometimes.
+
 ## Mathematical Theory
 
 - LARS is related to Forward Selection and based off of Forward Stagewise Regression. 
