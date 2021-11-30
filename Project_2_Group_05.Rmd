@@ -13,7 +13,24 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+# This is the setup chunk
+#  Here you can set global options for the entire document
+
+library(knitr) # I recommend doing this here
+library(ggplot2)
+library(lars)
+# Although you can call functions from a library using the following notation
+#  without loading the entire library.
+knitr::opts_chunk$set(echo = TRUE, 
+                      comment = NA, # Required
+                      fig.path = "./figures/",  # Store all figures here in relative path (make the folder first)
+                      fig.align = "center",
+                      fig.width = 7,
+                      fig.height = 7,
+                      message = FALSE, # Turn off load messages
+                      warning = FALSE # Turn off warnings
+                      )
+
 ```
 
 
@@ -26,8 +43,8 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Core Concepts 
 - LARS is considered a shrinkage method
   - Regression used to shrink high dimensional data and automatically select variables for model selection
-- LARS is like a combination of forward stepwise regression and forward stagewise regression
-- Instead of adding variables to the model one at a time, LARS makes optimally-sized leaps in optimal directions. These directions are chosen to make equal angles/correlations with each of the variables currently in our model.
+- LARS is very similar to forward stepwise regression and forward stagewise regression
+- Estimated parameters are increased in a direction equiangular to each predictor's correlation with the residual.
 
 ## Core Concepts 
 -	LARS first standardizes all coefficients of a regression model to have a mean zero and unit norm
@@ -68,11 +85,14 @@ knitr::opts_chunk$set(echo = FALSE)
 2. Numerically very efficient when the number of features is much larger than the number of data instances.
 3. It can easily be modified to produce solutions for other estimators.
 
+### Disadvntages of using Lars
+
+- LARS is highly sensitive to noise and can produce unpredictable results sometimes.
+
 ## Mathematical Theory
 
 - LARS is related to Forward Selection and based off of Forward Stagewise Regression. 
-- Forward Selection, also known as "Forward Stepwise Regression," is an ambitious algorithm that creates a model by selecting the predictors most correlated to the response. 
-Downsides?
+- Forward Selection, also known as "Forward Stepwise Regression," is an ambitious algorithm that creates a model by selecting the predictors most correlated to the response.
 
 ## Mathematical Theory
 
@@ -95,7 +115,7 @@ Downsides?
 
 - Once we've found the competing predictor $x_k$, we increase $(\beta_j, \beta_k)$, but this time in their joint least squares direction, and continue until some new competing predictor has as much correlation with the residuals
 <center>![LARS Algorithm w/ m=2 Predictors](math_img1.PNG){width=50%}</center>
-$$[4]$$
+<center>[4] LARS Algorithm w/ m=2 Predictors</center>
 
 ## Mathematical Theory
 
@@ -105,13 +125,13 @@ $$[4]$$
     - Since we are now dealing in higher-dimensional space, it's not as simple as taking the bisector of two vectors
 - We stop adjusting the model when $< r,x_j>=0\forall j$
 
-## Mathetmatical Theory
+## Mathematical Theory
 
 ### Visualizing the Goal
 
 - The end goal is to maximize the reduction of absolute correlations to the residuals at each step
 <center>![Correlations in LARS w/ m=10 Predictors](math_img2.PNG){width=40%}</center>
-$$[4]$$
+<center>[4] Correlations in LARS w/ m=10 Predictors</center>
 
 ----
 
@@ -123,9 +143,9 @@ part 2
 ```{r echo = TRUE}
 head(USArrests)
 ```
+
 ```{r echo = TRUE, warning = FALSE, error = FALSE, message = FALSE}
-library(ggplot2)
-library(lars)
+
 ```
 
 
@@ -160,17 +180,45 @@ ggplot(USArrests, aes(x=fit2$fit, y=y)) +
        title='Predicted vs. Actual Values')
 ```
 
-## Baby Example 2
+## Baby Example 2 - Using mtcars Data Set
 ```{r error=FALSE, warning=FALSE, echo=TRUE}
-head(mtcars)
+head(mtcars, 5)
+
+# Create the x matrix to be used in lars() function
+car.x <- as.matrix(subset(mtcars, select=-c(mpg)))
+head(car.x, 5)
+```
+
+```{r include=FALSE}
 attach(mtcars)
 ```
-```{r}
-library(lars)
-car_x <- as.matrix(subset(mtcars, select=-c(mpg)))
 
-# Using lars function on 
-car_lars <- lars(car_x, mtcars$mpg, type="lar", trace=TRUE, normalize=TRUE, intercept=TRUE)
+---
+```{r error=FALSE, warning=FALSE}
+# Using lars function on mtcars dataset
+car.lars <- lars(car.x, mtcars$mpg, type="lar", trace=TRUE, 
+                 normalize=TRUE, intercept=TRUE)
+```
+
+```{r}
+colnames(car.x)
+```
+
+---
+
+```{r}
+# Get summary of our mtcars lars object in the form of an ANOVA table
+summary(car.lars)
+```
+
+---
+```{r}
+plot(car.lars)
+```
+---
+
+```{r include=FALSE}
+detach(mtcars)
 ```
 
 
