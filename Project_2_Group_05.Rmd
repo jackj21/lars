@@ -58,7 +58,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ## When and Why Use Lars
 
 - LARS: Instead of making tiny hops in the direction of one variable at a time, LARS makes optimally-sized leaps in optimal directions. These directions are chosen to make equal angles/correlations with each of the variables currently in our model.
-  - should be used when overfitting is a concern, or one wants to have sparse parameter values 
+  - should be used when overfitting is a concern, or want to have sparse parameter values, or want your model to be easily interpretable 
 
 ## When and Why Use Lars
 
