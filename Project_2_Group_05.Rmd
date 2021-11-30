@@ -36,7 +36,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 ## History of Lars
 
-- LARS is a relatively new algorithm for fitting regressions to high-dimensional data developed 
+- LARS is a relatively new algorithm for fitting regressions to high-dimensional data
 - Developed in 2004 by Stanford affiliates Bradley Efron, Trevor Hastie, Iain Johnstone and Robert Tibshirani
 - Used as a less greedy and more efficient version of other model selection algorithms
 
@@ -134,23 +134,26 @@ knitr::opts_chunk$set(echo = TRUE,
 
 ----
 
-part 2
+Part 2
 
 ----
 
 ## Baby Example 1
 ```{r echo = TRUE}
+#UsArrests Data from 1973
 head(USArrests)
 ```
 
 ```{r echo = TRUE, warning = FALSE, error = FALSE, message = FALSE}
-
+library(lars)
 ```
 
 
 ## Baby Example 1
 ```{r echo = TRUE, fig.width=6.5, fig.height=4.5}
+#Matrix of predictors for lars function
 X = model.matrix(USArrests$UrbanPop ~ ., data = USArrests)[,-1]
+#Response variable
 y = USArrests$UrbanPop
 us.lars = lars(X,y,type="lar")
 plot(us.lars)
@@ -159,23 +162,12 @@ plot(us.lars)
 
 ## Baby Example 1
 ```{r echo = TRUE}
- summary(us.lars)
+#Summary and coefficients of our lars fit
+summary(us.lars)
 ```
 ```{r echo = TRUE}
+
 coef(us.lars)
-```
-
-## Baby Example 1
-
-```{r echo = TRUE, warning = FALSE, error = FALSE, message = FALSE, fig.width=5, fig.height=3}
-fit1 = predict.lars(us.lars,X, s = 1)
-fit2 = predict.lars(us.lars,X,s=2)
-
-
-ggplot(USArrests, aes(x=fit2$fit, y=y)) + 
-  geom_smooth() + geom_point() +
-  labs(x='Predicted Values', y='Actual Values', 
-       title='Predicted vs. Actual Values')
 ```
 
 
@@ -229,7 +221,7 @@ detach(mtcars)
 plot(pressure)
 ```
 
-## Wrap Up
+
 
 ## References
 1. https://tibshirani.su.domains/ftp/lars.pdf
