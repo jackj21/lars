@@ -92,8 +92,7 @@ knitr::opts_chunk$set(echo = TRUE,
 ## Mathematical Theory
 
 - LARS is related to Forward Selection and based off of Forward Stagewise Regression. 
-- Forward Selection, also known as "Forward Stepwise Regression," is an ambitious algorithm that creates a model by selecting the predictors most correlated to the response. 
-Downsides?
+- Forward Selection, also known as "Forward Stepwise Regression," is an ambitious algorithm that creates a model by selecting the predictors most correlated to the response.
 
 ## Mathematical Theory
 
@@ -116,7 +115,7 @@ Downsides?
 
 - Once we've found the competing predictor $x_k$, we increase $(\beta_j, \beta_k)$, but this time in their joint least squares direction, and continue until some new competing predictor has as much correlation with the residuals
 <center>![LARS Algorithm w/ m=2 Predictors](math_img1.PNG){width=50%}</center>
-$$[4]$$
+<center>[4] LARS Algorithm w/ m=2 Predictors</center>
 
 ## Mathematical Theory
 
@@ -126,13 +125,13 @@ $$[4]$$
     - Since we are now dealing in higher-dimensional space, it's not as simple as taking the bisector of two vectors
 - We stop adjusting the model when $< r,x_j>=0\forall j$
 
-## Mathetmatical Theory
+## Mathematical Theory
 
 ### Visualizing the Goal
 
 - The end goal is to maximize the reduction of absolute correlations to the residuals at each step
 <center>![Correlations in LARS w/ m=10 Predictors](math_img2.PNG){width=40%}</center>
-$$[4]$$
+<center>[4] Correlations in LARS w/ m=10 Predictors</center>
 
 ----
 
@@ -186,8 +185,8 @@ ggplot(USArrests, aes(x=fit2$fit, y=y)) +
 head(mtcars, 5)
 
 # Create the x matrix to be used in lars() function
-car_x <- as.matrix(subset(mtcars, select=-c(mpg)))
-head(car_x, 5)
+car.x <- as.matrix(subset(mtcars, select=-c(mpg)))
+head(car.x, 5)
 ```
 
 ```{r include=FALSE}
