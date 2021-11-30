@@ -222,9 +222,83 @@ detach(mtcars)
 ```
 
 
-## Lars using Crime
+## Example: Crime and Social Factors by DC Ward
+
+Predict the number of crimes for each of Washington, DC's eight wards from a dataset of socioeconomic statistics.
+
+**Predictors - ACS Social Characteristics DC Ward**  
+US Census data on topics such as household types, relationship and marital status, school enrollment and educational attainment, languages spoken and immigration info. Sorted by Ward and provided by https://opendata.dc.gov.
+
+**Response - Crimes Committed in the Past Two Years**  
+Provided by the DC Metropolitian Police Department, hosted at https://dcatlas.dcgis.dc.gov.
+
+## Example: Crime and Social Factors by DC Ward
 ```{r}
-plot(pressure)
+# load the dataset for the predictors
+social_data = read.csv("ACS_Social_Characteristics_DC_Ward.csv")
+
+# order the dataset by ward 1-8 for convenience
+x = social_data[order(social_data$WARD),]
+
+# drop unneeded columns and convert to a matrix
+x = as.matrix(subset(x, select = -c(OBJECTID, STATEFP, SLDUST, GEOID, NAMELSAD, LSAD,	LSY, MTFCC, FUNCSTAT, ALAND, AWATER, INTPTLAT, INTPTLON, NAME, WARD, GIS_ID,	SHAPEAREA, SHAPELEN)))
+```
+
+## Example: Crime and Social Factors by DC Ward
+```{r}
+# load the response data
+social_data = read.csv("dc-crimes-search-results.csv")
+
+# since the dataset is just a raw list of crimes, 
+# calculate the total number of crimes for each ward
+# and generate a new matrix from that information
+y = as.matrix(data.frame(y=c(
+  nrow(social_data[social_data$WARD == 1,]),
+  nrow(social_data[social_data$WARD == 2,]),
+  nrow(social_data[social_data$WARD == 3,]),
+  nrow(social_data[social_data$WARD == 4,]),
+  nrow(social_data[social_data$WARD == 5,]),
+  nrow(social_data[social_data$WARD == 6,]),
+  nrow(social_data[social_data$WARD == 7,]),
+  nrow(social_data[social_data$WARD == 8,])
+)))
+```
+
+## Example: Crime and Social Factors by DC Ward
+```{r}
+lars_fit = lars(x, y, type="lar", trace=TRUE)
+```
+
+## Example: Crime and Social Factors by DC Ward
+We can consult the dataset to see what the variables shown in the other slide represent.
+
+```
+Males 15 years and over: Never married
+
+Total households: Male householder, no spouse/partner present  
+
+Total households: Male householder, no spouse/partner present: Householder living alone: 65 years and over  
+
+Males 15 years and over  
+
+Total households: Male householder, no spouse/partner present: With own children of the householder under 18 years  
+
+Population 3 years and over enrolled in school: Elementary school (grades 1-8)  
+
+Males 15 years and over: Divorced  
+```
+
+## Example: Crime and Social Factors by DC Ward
+```{r}
+fitted_values = predict.lars(lars_fit, type="fit", x, s=2)$fit
+
+ggplot(data=as.data.frame(y), aes(x=fitted_values, y=y)) + geom_point() +
+  labs(x='Predicted Values', y='Actual Values', title='Predicted vs. Actual Values')
+```
+
+## Example: Crime and Social Factors by DC Ward
+```{r}
+plot(lars_fit)
 ```
 
 ## References

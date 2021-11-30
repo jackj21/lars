@@ -19,7 +19,6 @@ x = subset(x, select = -c(OBJECTID, STATEFP, SLDUST, GEOID, NAMELSAD, LSAD,	LSY,
 print(ncol(x))
 x = as.matrix(x)
 
-
 social_data = read.csv("dc-crimes-search-results.csv")
 y = as.matrix(data.frame(y=c(
   nrow(social_data[social_data$WARD == 1,]),
@@ -33,8 +32,13 @@ y = as.matrix(data.frame(y=c(
 )))
 
 lars_fit = lars(x, y, type="lar", trace=TRUE)
+
 summary(lars_fit)
+
+print(coef(lars_fit))
+
 plot(lars_fit)
+
 fitted_values = predict.lars(lars_fit, type="fit", x, s=2)$fit
 
 ggplot(data=as.data.frame(y), aes(x=fitted_values, y=y)) + geom_point() +
