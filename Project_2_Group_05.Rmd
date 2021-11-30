@@ -119,8 +119,44 @@ part 2
 ----
 
 ## Baby Example 1
-```{r}
-plot(pressure)
+```{r echo = TRUE}
+head(USArrests)
+```
+```{r echo = TRUE, warning = FALSE, error = FALSE, message = FALSE}
+library(ggplot2)
+library(lars)
+```
+
+
+## Baby Example 1
+```{r echo = TRUE}
+X = model.matrix(USArrests$UrbanPop ~ ., data = USArrests)[,-1]
+y = USArrests$UrbanPop
+us.lars = lars(X,y,type="lar")
+plot(us.lars)
+
+```
+
+## Baby Example 1
+```{r echo = TRUE}
+ summary(us.lars)
+```
+```{r echo = TRUE}
+coef(us.lars)
+```
+
+
+## Baby Example 1
+
+```{r echo = TRUE, warning = FALSE, error = FALSE, message = FALSE}
+fit1 = predict.lars(us.lars,X, s = 1)
+fit2 = predict.lars(us.lars,X,s=2)
+
+
+ggplot(USArrests, aes(x=fit2$fit, y=y)) + 
+  geom_smooth() + geom_point() +
+  labs(x='Predicted Values', y='Actual Values', 
+       title='Predicted vs. Actual Values')
 ```
 
 ## Baby Example 2
