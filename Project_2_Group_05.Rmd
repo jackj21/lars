@@ -1,7 +1,7 @@
 ---
 title: "Least-angle Regression (LARS)"
 author: "Group 5 Overfit Noise: Yahya Hussein, Andrew Farabow, Bryan Nguyen, Jack Jiang, Manning Luo, Shelby Neal"
-date: "November 24, 2021"
+date: "November 29, 2021"
 output: 
   revealjs::revealjs_presentation:
     theme: simple
@@ -89,9 +89,6 @@ knitr::opts_chunk$set(echo = TRUE,
 
 - LARS is highly sensitive to noise and can produce unpredictable results sometimes.
 
-## Mathematical Theory
-- LARS is related to Forward Selection and based off of Forward Stagewise Regression. 
-- Forward Selection, also known as "Forward Stepwise Regression," is an ambitious algorithm that creates a model by selecting the predictors most correlated to the response.
 
 ## Mathematical Theory
 
@@ -231,7 +228,15 @@ This problem is perfect for LARS, since the number of predictors is much greater
 ```{r}
 # load the dataset for the predictors
 social_data = read.csv("ACS_Social_Characteristics_DC_Ward.csv")
+names(social_data)[1] <- 'OBJECTID'
+```
 
+```{r, include=FALSE}
+attach(social_data)
+```
+
+
+```{r}
 # order the dataset by ward 1-8 for convenience
 x = social_data[order(social_data$WARD),]
 
