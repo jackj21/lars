@@ -1,16 +1,17 @@
 ---
-title: "Least-angle Regression (LARS)"
+title: "Least-Angle Regression (LARS)"
 author: "Group 5 Overfit Noise: Yahya Hussein, Andrew Farabow, Bryan Nguyen, Jack Jiang, Manning Luo, Shelby Neal"
-date: "November 29, 2021"
+date: "November 30, 2021"
 output: 
   revealjs::revealjs_presentation:
-    theme: simple
+    theme: beige
     highlight: espresso
     widescreen: true
     mathjax: default
     centering: false
     fig_caption: yes
 ---
+
 
 ```{r setup, include=FALSE}
 # This is the setup chunk
@@ -34,29 +35,28 @@ knitr::opts_chunk$set(echo = TRUE,
 ```
 
 
-## History of Lars
-
-- LARS is a relatively new algorithm for fitting regressions to high-dimensional data
-- Developed in 2004 by Stanford affiliates Bradley Efron, Trevor Hastie, Iain Johnstone and Robert Tibshirani
-- Used as a less greedy and more efficient version of other model selection algorithms
+## History of LARS
+- LARS is a relatively new algorithm for model selection and is suited for high-dimensional data.
+- It was developed in 2004 by Stanford affiliates Bradley Efron, Trevor Hastie, Iain Johnstone, and Robert Tibshirani.
+- LARS takes advantage of a less greedy and more efficient approach compared to other model selection algorithms.
 
 ## Core Concepts 
-- LARS is considered a shrinkage method
+- LARS is considered a shrinkage method.
   - Regression used to shrink high dimensional data and automatically select variables for model selection
-- LARS is very similar to forward stepwise regression and forward stagewise regression
+- LARS is very similar to forward stepwise regression and forward stagewise regression.
 - Estimated parameters are increased in a direction equiangular to each predictor's correlation with the residual.
 
 ## Core Concepts 
--	LARS first standardizes all coefficients of a regression model to have a mean zero and unit norm
+-	LARS first standardizes all coefficients of a regression model to have a mean zero and unit norm.
 - Then, LARS selects the predictor with the largest correlation to the response variable.
 -	LARS increases the coefficient of that predictor variable, starting from zero until it reaches its least-square value.
 
 ## Core Concepts 
 -	Continues until another predictor variable has similar correlation with the calculated residual.
--	Add that next predictor variable to the model, then increase their coefficients in the direction of the joint least-squares coefficient until another predictor variable of similar correlation to their residual is found
--	This process repeats itself until the model reaches the full least-squares solution
+-	Add that next predictor variable to the model, then increase their coefficients in the direction of the joint least-squares coefficient until another predictor variable of similar correlation to their residual is found.
+-	This process repeats itself until the model reaches the full least-squares solution.
 
-## When and Why Use Lars
+## Why and When to Use Lars
 
 ### Some other model selection methods
 
@@ -65,30 +65,30 @@ knitr::opts_chunk$set(echo = TRUE,
   - Example: Build a model for the deliciousness of a sandwich 
     - Variables: peanut butter and jelly
 
-## When and Why Use Lars
+## Why and When to Use Lars
 
 ### Some other model section methods
 
 - Forward stagewise regression: tries to remedy the greediness of forward selection by only partially adding variables. Whereas forward selection finds the variable with the most explanatory power and goes all out in adding it to the model, forward stagewise finds the variable with the most explanatory power and updates its weight by only epsilon in the correct direction. 
   - The problem now is that we have to make tons of updates, so forward stagewise can be very inefficient.
 
-## When and Why Use Lars
+## Why and When to Use Lars
 
 - LARS: Instead of making tiny hops in the direction of one variable at a time, LARS makes optimally-sized leaps in optimal directions. These directions are chosen to make equal angles/correlations with each of the variables currently in our model.
-  - should be used when overfitting is a concern, or want to have sparse parameter values, or want your model to be easily interpretable 
+  - Should be used when overfitting is a concern, or want to have sparse parameter values, or want your model to be easily interpretable 
 
-## When and Why Use Lars
+## Why and When to Use Lars
 
-### Advantages of using Lars
+### Advantages
 
 1. Computationally as fast as forward selection but may sometimes be more accurate.
 2. Numerically very efficient when the number of features is much larger than the number of data instances.
 3. It can easily be modified to produce solutions for other estimators.
 
-### Disadvntages of using Lars
+### Disadvantages
 
-- LARS is highly sensitive to noise and can produce unpredictable results sometimes.
-
+1. LARS is highly sensitive to noise and can produce unpredictable results sometimes.
+2. May contain some collinearity in high dimensional data, but that is expected for such data.
 
 ## Mathematical Theory
 
@@ -96,20 +96,21 @@ knitr::opts_chunk$set(echo = TRUE,
 
 - As with the classic forward selection model, start with all coefficients $\beta_j=0;\ j\in[1,m];\ m=\text{number of predictors}$
 - Find the predictor $x_j$ that has the highest correlation with $y$
-- $\begin{cases}r > 0 & ;\ \text{increase } \beta _{j}\\r < 0 & ;\ \text{decrease } \beta _{j}\end{cases}$, and calculate residuals of the new model fit ($\hat{y}=\beta_jx;\ r=y-\hat{y}$)
+- $\begin{cases}r > 0 & ;\ \text{increase } \beta _{j}\\r < 0 & ;\ \text{decrease } \beta _{j}\end{cases}$, 
+and calculate residuals of the new model fit ($\hat{y}=\beta_jx;\ r=y-\hat{y}$)
 
 ## Mathematical Theory
 
 ### Estimating the First Coefficient
 
-- Now that we have some residuals, we can calculate the correlation between the residuals and $x_j$, as well as the other predictors
-- At each increment/decrement of $\beta_j$, we examine these correlations and only stop adjusting $\beta_j$ when we find some new predictor $x_k$ that has equal correlation with the residuals as $x_j$
+- Now that we have some residuals, we can calculate the correlation between the residuals and $x_j$, as well as the other predictors.
+- At each increment/decrement of $\beta_j$, we examine these correlations and only stop adjusting $\beta_j$ when we find some new predictor $x_k$ that has equal correlation with the residuals as $x_j$.
 
 ## Mathematical Theory
 
 ### Fitting the Model
 
-- Once we've found the competing predictor $x_k$, we increase $(\beta_j, \beta_k)$, but this time in their joint least squares direction, and continue until some new competing predictor has as much correlation with the residuals
+- Once we've found the competing predictor $x_k$, we increase $(\beta_j, \beta_k)$, but this time in their joint least squares direction, and continue until some new competing predictor has as much correlation with the residuals.
 <center>![LARS Algorithm w/ m=2 Predictors](math_img1.PNG){width=50%}</center>
 <center>[4] LARS Algorithm w/ m=2 Predictors</center>
 
@@ -117,23 +118,19 @@ knitr::opts_chunk$set(echo = TRUE,
 
 ### Optimizing the Solution
 
-- For $m>3$, once we estimate the first two predictors, subsequent estimates with 3 or more predictors will fit the model along equiangular vectors
+- For $m>3$, once we estimate the first two predictors, subsequent estimates with 3 or more predictors will fit the model along equiangular vectors.
     - Since we are now dealing in higher-dimensional space, it's not as simple as taking the bisector of two vectors
-- We stop adjusting the model when $< r,x_j>=0\forall j$
+- We stop adjusting the model when 
+<center>$< r,x_j>=0\forall j$</center>
 
 ## Mathematical Theory
 
 ### Visualizing the Goal
 
-- The end goal is to maximize the reduction of absolute correlations to the residuals at each step
+- The end goal is to maximize the reduction of absolute correlations to the residuals at each step.
 <center>![Correlations in LARS w/ m=10 Predictors](math_img2.PNG){width=40%}</center>
 <center>[4] Correlations in LARS w/ m=10 Predictors</center>
 
-----
-
-Part 2
-
-----
 
 ## Baby Example 1
 ```{r echo = TRUE}
@@ -312,6 +309,6 @@ detach(social_data)
 2. https://ir.library.louisville.edu/cgi/viewcontent.cgi?article=3487&context=etd
 3. https://cran.r-project.org/web/packages/lars/lars.pdf
 4. https://web.stanford.edu/~hastie/TALKS/bradfest.pdf
-
+5. https://en.wikipedia.org/wiki/Least-angle_regression
  
 
