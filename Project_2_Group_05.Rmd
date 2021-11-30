@@ -13,7 +13,24 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+# This is the setup chunk
+#  Here you can set global options for the entire document
+
+library(knitr) # I recommend doing this here
+library(ggplot2)
+library(lars)
+# Although you can call functions from a library using the following notation
+#  without loading the entire library.
+knitr::opts_chunk$set(echo = TRUE, 
+                      comment = NA, # Required
+                      fig.path = "./figures/",  # Store all figures here in relative path (make the folder first)
+                      fig.align = "center",
+                      fig.width = 7,
+                      fig.height = 7,
+                      message = FALSE, # Turn off load messages
+                      warning = FALSE # Turn off warnings
+                      )
+
 ```
 
 
@@ -127,9 +144,9 @@ part 2
 ```{r echo = TRUE}
 head(USArrests)
 ```
+
 ```{r echo = TRUE, warning = FALSE, error = FALSE, message = FALSE}
-library(ggplot2)
-library(lars)
+
 ```
 
 
@@ -164,17 +181,45 @@ ggplot(USArrests, aes(x=fit2$fit, y=y)) +
        title='Predicted vs. Actual Values')
 ```
 
-## Baby Example 2
+## Baby Example 2 - Using mtcars Data Set
 ```{r error=FALSE, warning=FALSE, echo=TRUE}
-head(mtcars)
+head(mtcars, 5)
+
+# Create the x matrix to be used in lars() function
+car_x <- as.matrix(subset(mtcars, select=-c(mpg)))
+head(car_x, 5)
+```
+
+```{r include=FALSE}
 attach(mtcars)
 ```
-```{r}
-library(lars)
-car_x <- as.matrix(subset(mtcars, select=-c(mpg)))
 
-# Using lars function on 
-car_lars <- lars(car_x, mtcars$mpg, type="lar", trace=TRUE, normalize=TRUE, intercept=TRUE)
+---
+```{r error=FALSE, warning=FALSE}
+# Using lars function on mtcars dataset
+car.lars <- lars(car.x, mtcars$mpg, type="lar", trace=TRUE, 
+                 normalize=TRUE, intercept=TRUE)
+```
+
+```{r}
+colnames(car.x)
+```
+
+---
+
+```{r}
+# Get summary of our mtcars lars object in the form of an ANOVA table
+summary(car.lars)
+```
+
+---
+```{r}
+plot(car.lars)
+```
+---
+
+```{r include=FALSE}
+detach(mtcars)
 ```
 
 
