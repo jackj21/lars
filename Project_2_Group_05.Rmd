@@ -303,6 +303,10 @@ ggplot(data=as.data.frame(y), aes(x=fitted_values, y=y)) + geom_point() +
 plot(lars_fit)
 ```
 
+```{r, include=FALSE}
+detach(social_data)
+```
+
 ## References
 1. https://tibshirani.su.domains/ftp/lars.pdf
 2. https://ir.library.louisville.edu/cgi/viewcontent.cgi?article=3487&context=etd
