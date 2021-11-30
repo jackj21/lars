@@ -227,6 +227,7 @@ US Census data on topics such as household types, relationship and marital statu
 Provided by the DC Metropolitian Police Department, hosted at https://dcatlas.dcgis.dc.gov.
 
 ## Example: Crime and Social Factors by DC Ward
+This problem is perfect for LARS, since the number of predictors is much greater than the number of samples and multicollinearity is very high.
 ```{r}
 # load the dataset for the predictors
 social_data = read.csv("ACS_Social_Characteristics_DC_Ward.csv")
@@ -296,8 +297,6 @@ ggplot(data=as.data.frame(y), aes(x=fitted_values, y=y)) + geom_point() +
 ```{r}
 plot(lars_fit)
 ```
-
-
 
 ## References
 1. https://tibshirani.su.domains/ftp/lars.pdf
