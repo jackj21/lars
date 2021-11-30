@@ -26,8 +26,8 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Core Concepts 
 - LARS is considered a shrinkage method
   - Regression used to shrink high dimensional data and automatically select variables for model selection
-- LARS is like a combination of forward stepwise regression and forward stagewise regression
-- Instead of adding variables to the model one at a time, LARS makes optimally-sized leaps in optimal directions. These directions are chosen to make equal angles/correlations with each of the variables currently in our model.
+- LARS is very similar to forward stepwise regression and forward stagewise regression
+- Estimated parameters are increased in a direction equiangular to each predictor's correlation with the residual.
 
 ## Core Concepts 
 -	LARS first standardizes all coefficients of a regression model to have a mean zero and unit norm
